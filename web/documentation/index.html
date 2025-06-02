@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Management API Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #172b4d;
+            --accent-color: #3b82f6;
+            --text-color: #1e293b;
+            --light-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            z-index: 100;
+        }
+        
+        .section-heading {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            border-radius: 0.25rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+        
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-sublink {
+            display: block;
+            padding: 0.35rem 1rem 0.35rem 2rem;
+            color: var(--text-color);
+            border-radius: 0.25rem;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .nav-sublink:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+        
+        .component-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .component-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .diagram-box {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        table th {
+            background-color: var(--light-bg);
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-blue {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .badge-green {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .badge-yellow {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .badge-purple {
+            background-color: #f3e8ff;
+            color: #7e22ce;
+        }
+        
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        
+        .card-header {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        
+        .warning-box {
+            background-color: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        
+        .success-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        
+        /* Custom styling for tabs */
+        .tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 1.5rem 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Ensure code blocks don't overflow */
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Table of Contents Styling */
+        .toc-link {
+            display: block;
+            padding: 0.35rem 0.5rem;
+            color: var(--text-color);
+            border-radius: 0.25rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .toc-link:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+
+        .toc-link-l1 {
+            font-weight: 600;
+            padding-left: 0.5rem;
+        }
+
+        .toc-link-l2 {
+            padding-left: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .toc-link-l3 {
+            padding-left: 2.5rem;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Responsive fixes for PDF export */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .sticky-nav {
+                position: relative;
+            }
+
+            body {
+                font-size: 12pt;
+            }
+
+            h1 {
+                font-size: 24pt;
+                page-break-before: always;
+            }
+
+            h2 {
+                font-size: 18pt;
+            }
+
+            h3 {
+                font-size: 14pt;
+            }
+
+            .code-block {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="sticky-nav bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="text-xl font-bold text-blue-600">Image Management API</div>
+                <span class="badge badge-blue">v1.0</span>
+            </div>
+            <div class="hidden md:flex space-x-4">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="#api-endpoints" class="nav-link">API</a>
+                <a href="#components" class="nav-link">Components</a>
+                <a href="#installation" class="nav-link">Installation</a>
+                <a href="#best-practices" class="nav-link">Best Practices</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside class="sidebar w-64 hidden md:block fixed h-screen overflow-y-auto top-14 bg-white border-r border-gray-200 p-4">
+            <nav class="space-y-2">
+                <div class="mb-4">
+                    <div class="font-semibold mb-2 text-sm text-gray-500 uppercase">Contents</div>
+                    <a href="#overview" class="toc-link toc-link-l1">Overview</a>
+                    <a href="#features" class="toc-link toc-link-l2">Key Features</a>
+                    <a href="#use-cases" class="toc-link toc-link-l2">Use Cases</a>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-semibold mb-2 text-sm text-gray-500 uppercase">Architecture</div>
+                    <a href="#architecture" class="toc-link toc-link-l1">System Architecture</a>
+                    <a href="#tech-stack" class="toc-link toc-link-l2">Technology Stack</a>
+                    <a href="#data-flow" class="toc-link toc-link-l2">Data Flow</a>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-semibold mb-2 text-sm text-gray-500 uppercase">API Reference</div>
+                    <a href="#api-endpoints" class="toc-link toc-link-l1">API Endpoints</a>
+                    <a href="#authentication" class="toc-link toc-link-l2">Authentication</a>
+                    <a href="#users-api" class="toc-link toc-link-l2">Users</a>
+                    <a href="#teams-api" class="toc-link toc-link-l2">Teams</a>
+                    <a href="#images-api" class="toc-link toc-link-l2">Images</a>
+                    <a href="#search-api" class="toc-link toc-link-l2">Search</a>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-semibold mb-2 text-sm text-gray-500 uppercase">Components</div>
+                    <a href="#components" class="toc-link toc-link-l1">Components</a>
+                    <a href="#main-module" class="toc-link toc-link-l2">Main Module</a>
+                    <a href="#database-module" class="toc-link toc-link-l2">Database Module</a>
+                    <a href="#auth-module" class="toc-link toc-link-l2">Auth Module</a>
+                    <a href="#storage-module" class="toc-link toc-link-l2">Storage Module</a>
+                    <a href="#image-understanding-module" class="toc-link toc-link-l2">Image Understanding</a>
+                    <a href="#vector-db-module" class="toc-link toc-link-l2">Vector DB</a>
+                    <a href="#semantic-search-module" class="toc-link toc-link-l2">Semantic Search</a>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-semibold mb-2 text-sm text-gray-500 uppercase">Installation</div>
+                    <a href="#installation" class="toc-link toc-link-l1">Installation Guide</a>
+                    <a href="#prerequisites" class="toc-link toc-link-l2">Prerequisites</a>
+                    <a href="#docker-setup" class="toc-link toc-link-l2">Docker Setup</a>
+                    <a href="#configuration" class="toc-link toc-link-l2">Configuration</a>
+                    <a href="#deployment" class="toc-link toc-link-l2">Deployment</a>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-semibold mb-2 text-sm text-gray-500 uppercase">Additional Resources</div>
+                    <a href="#best-practices" class="toc-link toc-link-l1">Best Practices</a>
+                    <a href="#troubleshooting" class="toc-link toc-link-l1">Troubleshooting</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content md:ml-64 w-full p-6">
+            <div class="container mx-auto max-w-4xl">
+                <section id="overview" class="mb-12">
+                    <h1 class="text-3xl font-bold mb-6 text-gray-800">Image Management API</h1>
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Overview</h2>
+                        <p class="mb-4">
+                            The Image Management API is a comprehensive solution for storing, managing, and searching images with advanced semantic capabilities. 
+                            Built with FastAPI and integrating vector databases for image understanding, this system provides a robust platform for 
+                            modern image management needs with features like semantic search, team-based access control, and cloud storage integration.
+                        </p>
+                        <p class="mb-4">
+                            This documentation covers all aspects of the system, from architecture and API endpoints to installation procedures and best practices.
+                        </p>
+                    </div>
+
+                    <div id="features" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Key Features</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="mr-3 text-blue-500">
+                                        <i class="fas fa-search text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Semantic Image Search</h4>
+                                        <p class="text-sm text-gray-600">
+                                            Find images based on content meaning using advanced vector embeddings and AI models
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="mr-3 text-blue-500">
+                                        <i class="fas fa-database text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Vector Database Integration</h4>
+                                        <p class="text-sm text-gray-600">
+                                            ChromaDB integration for efficient storage and retrieval of image embeddings
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="mr-3 text-blue-500">
+                                        <i class="fas fa-users text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Team-Based Access Control</h4>
+                                        <p class="text-sm text-gray-600">
+                                            Manage permissions and access to images through team structures and API keys
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="mr-3 text-blue-500">
+                                        <i class="fas fa-cloud text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Cloud Storage Integration</h4>
+                                        <p class="text-sm text-gray-600">
+                                            Flexible storage options with GCS or MinIO for development environments
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="mr-3 text-blue-500">
+                                        <i class="fas fa-brain text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">AI-Powered Understanding</h4>
+                                        <p class="text-sm text-gray-600">
+                                            Image analysis using modern embedding models for content understanding
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="mr-3 text-blue-500">
+                                        <i class="fas fa-key text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">API Key Authentication</h4>
+                                        <p class="text-sm text-gray-600">
+                                            Secure access with API key-based authentication and authorization systems
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="use-cases" class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Use Cases</h3>
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Digital Asset Management</h4>
+                            <p class="text-gray-700 mb-2">
+                                Ideal for organizations managing large collections of digital images that need efficient categorization and retrieval. The semantic search capabilities allow users to find images based on content rather than just metadata.
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Content Discovery Platforms</h4>
+                            <p class="text-gray-700 mb-2">
+                                Enable users to discover relevant visual content through intelligent search mechanisms that understand image context and meaning.
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">E-commerce Product Catalogs</h4>
+                            <p class="text-gray-700 mb-2">
+                                Enhance product search by allowing customers to find items based on visual similarities and image content rather than just keywords.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold mb-2">Research and Data Analysis</h4>
+                            <p class="text-gray-700 mb-2">
+                                Support research workflows requiring analysis of large image datasets with semantic understanding and categorization.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="architecture" class="mb-12">
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">System Architecture</h2>
+                        <p class="mb-6">
+                            The Image Management API follows a modular architecture designed for scalability and maintainability.
+                            The system consists of several key components working together to provide a comprehensive solution.
+                        </p>
+                        
+                        <div class="diagram-box mb-6">
+                            <h4 class="font-semibold mb-3">Architecture Diagram</h4>
+                            <div class="border p-4 rounded-lg text-center">
+                                <pre class="text-sm text-left overflow-x-auto">
+┌───────────────┐     ┌───────────────┐     ┌───────────────┐
+│  Client App   │────▶│   FastAPI     │────▶│  Database     │
+│               │     │   Server      │     │  (PostgreSQL) │
+└───────────────┘     └───────┬───────┘     └───────────────┘
+                             │
+                  ┌──────────┼──────────┐
+                  ▼          ▼          ▼
+        ┌─────────────┐ ┌─────────┐ ┌─────────────┐
+        │ Cloud       │ │ Vector  │ │ Image       │
+        │ Storage     │ │ Database│ │ Processing  │
+        │ (GCS/MinIO) │ │(ChromaDB)│ │ Services   │
+        └─────────────┘ └─────────┘ └─────────────┘
+                </pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tech-stack" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Technology Stack</h3>
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Backend Framework</h4>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li><span class="font-medium">FastAPI</span> - High-performance API framework with automatic OpenAPI documentation</li>
+                                <li><span class="font-medium">Uvicorn</span> - ASGI server for running FastAPI applications</li>
+                                <li><span class="font-medium">Pydantic</span> - Data validation and settings management</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Database</h4>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li><span class="font-medium">PostgreSQL</span> - Primary relational database</li>
+                                <li><span class="font-medium">SQLAlchemy</span> - SQL toolkit and ORM</li>
+                                <li><span class="font-medium">Alembic</span> - Database migration tool</li>
+                                <li><span class="font-medium">AsyncPG</span> - Asynchronous PostgreSQL driver</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Vector Database</h4>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li><span class="font-medium">ChromaDB</span> - Vector database for storing and retrieving image embeddings</li>
+                                <li><span class="font-medium">Sentence Transformers</span> - Models for generating embeddings</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Storage</h4>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li><span class="font-medium">Google Cloud Storage</span> - Cloud storage for production</li>
+                                <li><span class="font-medium">MinIO</span> - S3-compatible storage for development</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Authentication</h4>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li><span class="font-medium">API Key</span> - Custom API key authentication system</li>
+                                <li><span class="font-medium">Python-JOSE</span> - JWT token handling if needed</li>
+                                <li><span class="font-medium">PassLib</span> - Password hashing for user credentials</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold mb-2">Image Processing</h4>
+                            <ul class="list-disc pl-5">
+                                <li><span class="font-medium">Pillow</span> - Image processing library</li>
+                                <li><span class="font-medium">CLIP or other models</span> - Image understanding and embedding generation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="data-flow" class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Data Flow</h3>
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Image Upload Flow</h4>
+                            <ol class="list-decimal pl-5 mb-3">
+                                <li>Client authenticates with API key</li>
+                                <li>Client uploads image via the API</li>
+                                <li>System validates the image and checks permissions</li>
+                                <li>Image is stored in cloud storage (GCS or MinIO)</li>
+                                <li>System generates embeddings using AI models</li>
+                                <li>Embeddings are stored in vector database (ChromaDB)</li>
+                                <li>Image metadata and references are stored in PostgreSQL</li>
+                                <li>System returns success response with image details</li>
+                            </ol>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold mb-2">Image Search Flow</h4>
+                            <ol class="list-decimal pl-5">
+                                <li>Client authenticates with API key</li>
+                                <li>Client submits search query (text or image)</li>
+                                <li>System validates permissions for the search scope</li>
+                                <li>Text query is converted to embedding or image is processed for embedding</li>
+                                <li>Vector database performs similarity search with the embedding</li>
+                                <li>Results are filtered based on user's team access</li>
+                                <li>System returns matched images with relevance scores and metadata</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="api-endpoints" class="mb-12">
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">API Endpoints</h2>
+                        <p class="mb-4">
+                            The Image Management API provides a comprehensive set of endpoints for managing images, users, teams, and performing searches.
+                            All endpoints use a RESTful design pattern and return JSON responses.
+                        </p>
+                    </div>
+
+                    <div id="authentication" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Authentication</h3>
+                        <p class="mb-4">
+                            All API requests must include authentication using an API key. The key can be provided in either:
+                        </p>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li>HTTP Header: <code class="bg-gray-100 px-2 py-1 rounded">Authorization: Bearer YOUR_API_KEY</code></li>
+                            <li>Query parameter: <code class="bg-gray-100 px-2 py-1 rounded">?api_key=YOUR_API_KEY</code></li>
+                        </ul>
+                        
+                        <div class="code-block mb-4">
+                            <pre>
+# Example request with header authentication
+curl -X GET \
+  "https://api.example.com/images" \
+  -H "Authorization: Bearer imapi_YOUR_API_KEY"
+                            </pre>
+                        </div>
+                        
+                        <div class="info-box">
+                            <p><i class="fas fa-info-circle mr-2"></i> API keys are team-specific and determine the scope of accessible resources.</p>
+                        </div>
+                    </div>
+
+                    <div id="users-api" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Users API</h3>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Endpoint</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/users</td>
+                                        <td>Get a list of all users</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/users/{user_id}</td>
+                                        <td>Get details of a specific user</td>
+                                    </tr>
+                                    <tr>
+                                        <td>POST</td>
+                                        <td>/users</td>
+                                        <td>Create a new user</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PUT</td>
+                                        <td>/users/{user_id}</td>
+                                        <td>Update user details</td>
+                                    </tr>
+                                    <tr>
+                                        <td>DELETE</td>
+                                        <td>/users/{user_id}</td>
+                                        <td>Delete a user</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4 class="font-semibold mt-4 mb-2">Example Request: Creating a User</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+curl -X POST \
+  "https://api.example.com/users" \
+  -H "Authorization: Bearer imapi_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "johndoe",
+    "email": "john.doe@example.com",
+    "full_name": "John Doe",
+    "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }'
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Example Response</h4>
+                        <div class="code-block">
+                            <pre>
+{
+  "id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+  "username": "johndoe",
+  "email": "john.doe@example.com",
+  "full_name": "John Doe",
+  "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "is_active": true,
+  "created_at": "2024-06-01T10:15:30.123Z",
+  "updated_at": "2024-06-01T10:15:30.123Z"
+}
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="teams-api" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Teams API</h3>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Endpoint</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/teams</td>
+                                        <td>Get a list of all teams</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/teams/{team_id}</td>
+                                        <td>Get details of a specific team</td>
+                                    </tr>
+                                    <tr>
+                                        <td>POST</td>
+                                        <td>/teams</td>
+                                        <td>Create a new team</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PUT</td>
+                                        <td>/teams/{team_id}</td>
+                                        <td>Update team details</td>
+                                    </tr>
+                                    <tr>
+                                        <td>DELETE</td>
+                                        <td>/teams/{team_id}</td>
+                                        <td>Delete a team</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4 class="font-semibold mt-4 mb-2">Example Request: Creating a Team</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+curl -X POST \
+  "https://api.example.com/teams" \
+  -H "Authorization: Bearer imapi_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Marketing Team",
+    "description": "Team responsible for marketing materials"
+  }'
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="images-api" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Images API</h3>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Endpoint</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/images</td>
+                                        <td>Get a list of images with pagination</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/images/{image_id}</td>
+                                        <td>Get details of a specific image</td>
+                                    </tr>
+                                    <tr>
+                                        <td>POST</td>
+                                        <td>/images/upload</td>
+                                        <td>Upload a new image</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PUT</td>
+                                        <td>/images/{image_id}</td>
+                                        <td>Update image metadata</td>
+                                    </tr>
+                                    <tr>
+                                        <td>DELETE</td>
+                                        <td>/images/{image_id}</td>
+                                        <td>Delete an image</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/images/{image_id}/url</td>
+                                        <td>Get a signed URL for image access</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4 class="font-semibold mt-4 mb-2">Example Request: Uploading an Image</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+curl -X POST \
+  "https://api.example.com/images/upload" \
+  -H "Authorization: Bearer imapi_YOUR_API_KEY" \
+  -F "file=@/path/to/image.jpg" \
+  -F "description=Product image for catalog" \
+  -F "tags=product,catalog,electronics"
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Example Response</h4>
+                        <div class="code-block">
+                            <pre>
+{
+  "id": "f1e2d3c4-5678-90ab-cdef-1234567890ab",
+  "filename": "image.jpg",
+  "storage_path": "images/user123/f1e2d3c4-image.jpg",
+  "file_size": 1024567,
+  "content_type": "image/jpeg",
+  "description": "Product image for catalog",
+  "tags": ["product", "catalog", "electronics"],
+  "url": "https://storage.example.com/signed-url-to-access-image",
+  "uploaded_by": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+  "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "created_at": "2024-06-01T10:15:30.123Z"
+}
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="search-api" class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Search API</h3>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Endpoint</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/search/text</td>
+                                        <td>Search images using text query</td>
+                                    </tr>
+                                    <tr>
+                                        <td>POST</td>
+                                        <td>/search/image</td>
+                                        <td>Search images using an image as reference</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/search/similar/{image_id}</td>
+                                        <td>Find images similar to a specific image</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GET</td>
+                                        <td>/search/advanced</td>
+                                        <td>Advanced search with filters and semantic options</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4 class="font-semibold mt-4 mb-2">Example Request: Text-Based Search</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+curl -X GET \
+  "https://api.example.com/search/text?q=blue+sky+with+mountains&limit=10" \
+  -H "Authorization: Bearer imapi_YOUR_API_KEY"
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Example Request: Image-Based Search</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+curl -X POST \
+  "https://api.example.com/search/image?limit=10" \
+  -H "Authorization: Bearer imapi_YOUR_API_KEY" \
+  -F "file=@/path/to/reference_image.jpg"
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Example Response from Search</h4>
+                        <div class="code-block">
+                            <pre>
+{
+  "results": [
+    {
+      "id": "f1e2d3c4-5678-90ab-cdef-1234567890ab",
+      "filename": "mountain_vista.jpg",
+      "description": "Mountain landscape with blue sky",
+      "tags": ["nature", "mountains", "landscape"],
+      "url": "https://storage.example.com/signed-url",
+      "similarity_score": 0.92,
+      "created_at": "2024-06-01T10:15:30.123Z"
+    },
+    {
+      "id": "a9b8c7d6-5432-10fe-dcba-0987654321ab",
+      "filename": "alps_view.jpg",
+      "description": "View of the Alps on a clear day",
+      "tags": ["nature", "mountains", "alps"],
+      "url": "https://storage.example.com/signed-url-2",
+      "similarity_score": 0.87,
+      "created_at": "2024-05-15T08:30:15.456Z"
+    }
+  ],
+  "count": 2,
+  "total": 2,
+  "query": "blue sky with mountains"
+}
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="components" class="mb-12">
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Components</h2>
+                        <p class="mb-4">
+                            The Image Management API is organized into modular components, each responsible for specific functionality.
+                            This section provides an in-depth look at each component and how they interact.
+                        </p>
+                    </div>
+
+                    <div id="main-module" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Main Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-blue">main.py</span>
+                        </div>
+                        <p class="mb-4">
+                            The main module initializes the FastAPI application, includes routers, and configures middleware for the Image Management API.
+                            It serves as the entry point for the application.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Core Functions</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li>Initialize FastAPI application</li>
+                            <li>Configure CORS middleware</li>
+                            <li>Mount static files</li>
+                            <li>Include routers for various endpoints</li>
+                            <li>Set up exception handlers</li>
+                            <li>Configure Swagger UI for API documentation</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">Key Code Example</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+import logging
+import asyncio
+from fastapi import FastAPI, Request, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.staticfiles import StaticFiles
+
+# Create FastAPI instance
+app = FastAPI(
+    title="Image Management API",
+    description="API for managing and searching images with semantic capabilities",
+    version="1.0.0",
+)
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+from routers import users_router, teams_router, images_router, search_router
+
+app.include_router(users_router, prefix="/users", tags=["Users"])
+app.include_router(teams_router, prefix="/teams", tags=["Teams"])
+app.include_router(images_router, prefix="/images", tags=["Images"])
+app.include_router(search_router, prefix="/search", tags=["Search"])
+
+# Root endpoint
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    return """
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Image Management API&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            &lt;h1&gt;Image Management API&lt;/h1&gt;
+            &lt;p&gt;Visit &lt;a href="/docs"&gt;/docs&lt;/a&gt; for API documentation&lt;/p&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;
+    """
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+                            </pre>
+                        </div>
+                        
+                        <div class="info-box">
+                            <p><i class="fas fa-info-circle mr-2"></i> The main module is typically run directly by Uvicorn when starting the application.</p>
+                        </div>
+                    </div>
+
+                    <div id="database-module" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Database Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-green">database.py</span>
+                        </div>
+                        <p class="mb-4">
+                            The database module handles database connection configuration, SQLAlchemy models, and core database utilities.
+                            It defines the data structure and relationships for the application.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Key Models</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li><strong>User</strong> - Represents system users</li>
+                            <li><strong>Team</strong> - Represents teams/organizations</li>
+                            <li><strong>APIKey</strong> - API authentication keys</li>
+                            <li><strong>Image</strong> - Image metadata and storage info</li>
+                            <li><strong>ImageEmbedding</strong> - Vector embeddings for semantic search</li>
+                            <li><strong>AccessLog</strong> - Audit log for system activity</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">Database Connection Setup</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+# Database URL (from environment or default)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:password@localhost/imagedb")
+
+# Create async engine
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=False,
+    future=True,
+)
+
+# Create session factory
+async_session = sessionmaker(
+    engine, 
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autocommit=False,
+    autoflush=False,
+)
+
+# Base class for all models
+Base = declarative_base()
+
+# Database session dependency
+async def get_db() -> AsyncSession:
+    """Get a database session"""
+    async with async_session() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Example Model: Image</h4>
+                        <div class="code-block">
+                            <pre>
+class Image(Base):
+    """Image model"""
+    __tablename__ = "images"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    filename = Column(String, nullable=False)
+    storage_path = Column(String, nullable=False)
+    content_type = Column(String, nullable=False)
+    file_size = Column(Integer, nullable=False)
+    width = Column(Integer)
+    height = Column(Integer)
+    description = Column(String)
+    tags = Column(JSONB, default=list)
+    metadata = Column(JSONB, default=dict)
+    is_public = Column(Boolean, default=False)
+    
+    # Foreign keys
+    team_id = Column(UUID(as_uuid=True), ForeignKey("teams.id"), nullable=False)
+    uploaded_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    
+    # Timestamps
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    team = relationship("Team", back_populates="images")
+    user = relationship("User", back_populates="images")
+    embeddings = relationship("ImageEmbedding", back_populates="image", cascade="all, delete-orphan")
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="auth-module" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Auth Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-purple">auth.py</span>
+                        </div>
+                        <p class="mb-4">
+                            The authentication module handles API key authentication and access control for the API.
+                            It provides functions for validating API keys, checking permissions, and managing user sessions.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Key Functions</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li><strong>generate_api_key()</strong> - Creates secure API keys</li>
+                            <li><strong>get_current_user()</strong> - Authenticates and returns the current user</li>
+                            <li><strong>verify_team_access()</strong> - Checks if a user has access to a team's resources</li>
+                            <li><strong>log_access()</strong> - Records API access for auditing</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">Authentication Flow</h4>
+                        <div class="code-block">
+                            <pre>
+# Security schemas for API key authentication
+api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
+api_key_query = APIKeyQuery(name="api_key", auto_error=False)
+
+# API Key generation function
+def generate_api_key() -> str:
+    """Generate a secure API key"""
+    return f"imapi_{secrets.token_urlsafe(32)}"
+
+# Get current user from API key
+async def get_current_user(
+    api_key_header: str = Depends(api_key_header),
+    api_key_query: str = Depends(api_key_query),
+    db: AsyncSession = Depends(get_db)
+) -> User:
+    """Get current user from API key (header or query)"""
+    # Try to get API key from header or query
+    if api_key_header and api_key_header.startswith("Bearer "):
+        api_key = api_key_header.replace("Bearer ", "")
+    else:
+        api_key = api_key_query
+    
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="API key required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Find API key in database
+    stmt = select(APIKey).where(APIKey.key == api_key, APIKey.is_active == True)
+    result = await db.execute(stmt)
+    db_api_key = result.scalar_one_or_none()
+    
+    if not db_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API key",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Get user associated with API key
+    stmt = select(User).where(User.id == db_api_key.user_id, User.is_active == True)
+    result = await db.execute(stmt)
+    user = result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found or inactive",
+        )
+    
+    # Log access
+    await log_access(db, user.id, db_api_key.id)
+    
+    return user
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="storage-module" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Storage Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-yellow">storage.py</span>
+                        </div>
+                        <p class="mb-4">
+                            The storage module handles integration with cloud storage for storing and retrieving image files.
+                            It supports both Google Cloud Storage (GCS) for production and MinIO for development environments.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Key Functions</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li><strong>upload_file_to_gcs()</strong> - Uploads files to GCS or MinIO</li>
+                            <li><strong>generate_signed_url()</strong> - Creates temporary access URLs for images</li>
+                            <li><strong>delete_file_from_gcs()</strong> - Removes files from storage</li>
+                            <li><strong>validate_image()</strong> - Checks image format and security</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">File Upload Example</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+async def upload_file_to_gcs(
+    file: UploadFile,
+    team_id: uuid.UUID,
+    user_id: uuid.UUID
+) -> Tuple[str, str, int]:
+    """
+    Upload file to Google Cloud Storage or MinIO (development)
+    
+    Returns:
+        Tuple[str, str, int]: (storage_path, content_type, file_size)
+    """
+    # Validate file
+    content_type, file_size = await validate_image(file)
+    
+    # Generate a unique filename
+    unique_id = str(uuid.uuid4())
+    file_extension = os.path.splitext(file.filename)[1].lower()
+    storage_filename = f"{unique_id}{file_extension}"
+    
+    # Create path with team and user IDs for organization
+    storage_path = f"images/{team_id}/{user_id}/{storage_filename}"
+    
+    # Read file content
+    file_content = await file.read()
+    
+    # Initialize the appropriate client (GCS or MinIO)
+    if USE_MINIO:
+        # Use MinIO client for development
+        client = minio_client
+        try:
+            client.put_object(
+                bucket_name=BUCKET_NAME,
+                object_name=storage_path,
+                data=io.BytesIO(file_content),
+                length=len(file_content),
+                content_type=content_type
+            )
+        except Exception as e:
+            logger.error(f"MinIO upload error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to upload file to storage"
+            )
+    else:
+        # Use GCS client for production
+        client = gcs_client
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob(storage_path)
+        try:
+            blob.upload_from_string(
+                file_content,
+                content_type=content_type
+            )
+        except Exception as e:
+            logger.error(f"GCS upload error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to upload file to storage"
+            )
+    
+    # Seek back to start of file for any subsequent operations
+    await file.seek(0)
+    
+    return storage_path, content_type, file_size
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Generating Signed URLs</h4>
+                        <div class="code-block">
+                            <pre>
+async def generate_signed_url(storage_path: str, expiration: int = 3600) -> str:
+    """
+    Generate a signed URL for accessing the file
+    
+    Args:
+        storage_path: Path in the storage bucket
+        expiration: URL expiration time in seconds (default 1 hour)
+        
+    Returns:
+        str: Signed URL
+    """
+    if USE_MINIO:
+        # Generate MinIO temporary URL
+        try:
+            url = minio_client.presigned_get_object(
+                bucket_name=BUCKET_NAME,
+                object_name=storage_path,
+                expires=expiration
+            )
+            return url
+        except Exception as e:
+            logger.error(f"MinIO signed URL error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to generate image access URL"
+            )
+    else:
+        # Generate GCS signed URL
+        bucket = gcs_client.bucket(BUCKET_NAME)
+        blob = bucket.blob(storage_path)
+        try:
+            url = blob.generate_signed_url(
+                version="v4",
+                expiration=timedelta(seconds=expiration),
+                method="GET"
+            )
+            return url
+        except Exception as e:
+            logger.error(f"GCS signed URL error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to generate image access URL"
+            )
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="image-understanding-module" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Image Understanding Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-blue">image_understanding.py</span>
+                        </div>
+                        <p class="mb-4">
+                            This module handles image understanding using computer vision models and implements the core functionality for generating image embeddings.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Key Functions</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li><strong>load_embedding_model()</strong> - Loads the appropriate AI model</li>
+                            <li><strong>generate_image_embedding()</strong> - Creates vector embeddings from images</li>
+                            <li><strong>extract_image_features()</strong> - Extracts semantic features from images</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">Embedding Generation Example</h4>
+                        <div class="code-block">
+                            <pre>
+async def generate_image_embedding(
+    image_path: str,
+    image_url: str = None,
+    image_data: bytes = None
+) -> Dict[str, Any]:
+    """
+    Generate embeddings for an image using the configured model
+    
+    Args:
+        image_path: Storage path for reference
+        image_url: Optional URL to fetch image from
+        image_data: Optional raw image data
+        
+    Returns:
+        Dict with embedding vector and metadata
+    """
+    if not ENABLE_REAL_EMBEDDINGS:
+        # For testing or limited environments, generate mock embeddings
+        logger.info("Generating mock embedding (ENABLE_REAL_EMBEDDINGS is False)")
+        mock_embedding = np.random.rand(EMBEDDING_DIMENSION).astype(np.float32).tolist()
+        return {
+            "vector": mock_embedding,
+            "model": "mock",
+            "dimension": EMBEDDING_DIMENSION
+        }
+    
+    try:
+        # Get image data for processing
+        if image_data:
+            # Use provided image data
+            image = PILImage.open(io.BytesIO(image_data))
+        elif image_url:
+            # Fetch image from URL
+            async with httpx.AsyncClient() as client:
+                response = await client.get(image_url)
+                response.raise_for_status()
+                image_data = response.content
+                image = PILImage.open(io.BytesIO(image_data))
+        else:
+            logger.error("No image source provided for embedding generation")
+            raise ValueError("Image data or URL required")
+            
+        # Generate embedding using the model
+        if EMBEDDING_MODEL == "clip":
+            # Use CLIP model for embeddings
+            embedding_vector = embedding_model.encode(image, convert_to_tensor=True).tolist()
+        else:
+            # Use alternative model if configured
+            embedding_vector = alternate_model.process_image(image).tolist()
+            
+        return {
+            "vector": embedding_vector,
+            "model": EMBEDDING_MODEL,
+            "dimension": len(embedding_vector)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generating image embedding: {e}")
+        # Return mock embedding as fallback
+        mock_embedding = np.random.rand(EMBEDDING_DIMENSION).astype(np.float32).tolist()
+        return {
+            "vector": mock_embedding,
+            "model": "fallback_mock",
+            "dimension": EMBEDDING_DIMENSION,
+            "error": str(e)
+        }
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="vector-db-module" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Vector DB Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-green">vector_db.py</span>
+                        </div>
+                        <p class="mb-4">
+                            This module handles the vector database functionality using ChromaDB. It provides functions for storing and retrieving image embeddings.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Key Functions</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li><strong>initialize_vector_db()</strong> - Sets up ChromaDB connection</li>
+                            <li><strong>add_embedding()</strong> - Stores vector embeddings with metadata</li>
+                            <li><strong>search_by_embedding()</strong> - Performs similarity search</li>
+                            <li><strong>delete_embedding()</strong> - Removes embeddings from the vector DB</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">Vector Database Initialization</h4>
+                        <div class="code-block mb-4">
+                            <pre>
+async def initialize_vector_db():
+    """Initialize ChromaDB client and collection"""
+    global chroma_client, collection, vector_db_available
+    
+    try:
+        # Import here to avoid startup errors if not installed
+        import chromadb
+        from chromadb.config import Settings
+        
+        # Create ChromaDB client with persistence
+        chroma_client = chromadb.PersistentClient(
+            path=CHROMA_PERSIST_DIRECTORY,
+            settings=Settings(
+                anonymized_telemetry=False,
+                allow_reset=True
+            )
+        )
+        
+        # Get or create collection for image embeddings
+        collection = chroma_client.get_or_create_collection(
+            name=CHROMA_COLLECTION_NAME,
+            embedding_function=None,  # We provide our own embeddings
+            metadata={"dimension": EMBEDDING_DIMENSION}
+        )
+        
+        logger.info(f"ChromaDB initialized with collection '{CHROMA_COLLECTION_NAME}'")
+        vector_db_available = True
+        
+    except Exception as e:
+        logger.error(f"Failed to initialize ChromaDB: {e}")
+        vector_db_available = False
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Vector Search Example</h4>
+                        <div class="code-block">
+                            <pre>
+async def search_by_embedding(
+    embedding: List[float],
+    team_id: Optional[uuid.UUID] = None,
+    limit: int = 10,
+    min_score: float = 0.5
+) -> Dict[str, Any]:
+    """
+    Search for similar images by embedding vector
+    
+    Args:
+        embedding: Vector embedding to search with
+        team_id: Optional team ID for filtering results
+        limit: Maximum results to return
+        min_score: Minimum similarity score threshold
+        
+    Returns:
+        Dict with results and metadata
+    """
+    if not vector_db_available or collection is None:
+        logger.warning("Vector DB not available for search")
+        return {"results": [], "count": 0}
+    
+    # Prepare metadata filter if team_id provided
+    metadata_filter = None
+    if team_id:
+        metadata_filter = {"team_id": str(team_id)}
+    
+    try:
+        # Perform search in ChromaDB
+        results = collection.query(
+            query_embeddings=[embedding],
+            n_results=limit,
+            where=metadata_filter
+        )
+        
+        # Process results
+        image_ids = results.get('ids', [[]])[0]
+        distances = results.get('distances', [[]])[0]
+        metadatas = results.get('metadatas', [[]])[0]
+        
+        # Convert distances to similarity scores (1.0 = identical, 0.0 = completely different)
+        similarity_scores = [1.0 - min(max(distance, 0.0), 1.0) for distance in distances]
+        
+        # Filter by minimum score
+        filtered_results = []
+        for i, score in enumerate(similarity_scores):
+            if score >= min_score:
+                result = {
+                    "image_id": metadatas[i].get('image_id'),
+                    "similarity_score": score,
+                    "metadata": metadatas[i]
+                }
+                filtered_results.append(result)
+        
+        return {
+            "results": filtered_results,
+            "count": len(filtered_results)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error during vector search: {e}")
+        return {"results": [], "count": 0, "error": str(e)}
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="semantic-search-module" class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Semantic Search Module</h3>
+                        <div class="mb-4">
+                            <span class="badge badge-purple">semantic_search.py</span>
+                        </div>
+                        <p class="mb-4">
+                            This module provides advanced semantic search capabilities for images using ChromaDB and various embedding models.
+                            It supports text-to-image search, image-to-image search, and multimodal search with filtering options.
+                        </p>
+                        
+                        <h4 class="font-semibold mb-2">Key Functions</h4>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li><strong>text_to_image_search()</strong> - Search images using text queries</li>
+                            <li><strong>image_to_image_search()</strong> - Find similar images</li>
+                            <li><strong>combined_search()</strong> - Search with both text and image inputs</li>
+                            <li><strong>filter_search_results()</strong> - Apply metadata filters to results</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mb-2">Text to Image Search Example</h4>
+                        <div class="code-block">
+                            <pre>
+async def text_to_image_search(
+    query: str,
+    team_id: Optional[uuid.UUID] = None,
+    limit: int = 10,
+    min_score: float = 0.5,
+    filters: Dict[str, Any] = None
+) -> Dict[str, Any]:
+    """
+    Search images using a text query
+    
+    Args:
+        query: Text query to search with
+        team_id: Optional team ID for filtering results
+        limit: Maximum results to return
+        min_score: Minimum similarity score threshold
+        filters: Additional metadata filters
+        
+    Returns:
+        Dict with results and metadata
+    """
+    try:
+        # Generate text embedding
+        if EMBEDDING_MODEL == "clip":
+            # Generate CLIP text embedding
+            text_embedding = embedding_model.encode(query, convert_to_tensor=True).tolist()
+        else:
+            # Use alternative text embedding model
+            text_embedding = text_embedding_model.encode(query).tolist()
+            
+        # Apply team filter
+        metadata_filter = filters or {}
+        if team_id:
+            metadata_filter["team_id"] = str(team_id)
+            
+        # Search vector database
+        search_results = await search_by_embedding(
+            embedding=text_embedding,
+            team_id=team_id,
+            limit=limit,
+            min_score=min_score
+        )
+        
+        # Fetch full image details for results
+        enriched_results = await enrich_search_results(search_results["results"])
+        
+        return {
+            "results": enriched_results,
+            "count": len(enriched_results),
+            "query": query
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in text-to-image search: {e}")
+        return {"results": [], "count": 0, "query": query, "error": str(e)}
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="installation" class="mb-12">
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Installation Guide</h2>
+                        <p class="mb-4">
+                            This section provides detailed instructions for installing and running the Image Management API using Docker.
+                            Follow these steps to set up the system in your environment.
+                        </p>
+                    </div>
+
+                    <div id="prerequisites" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Prerequisites</h3>
+                        <p class="mb-4">Before setting up the system, ensure you have the following installed:</p>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li>Docker (20.10.x or higher)</li>
+                            <li>Docker Compose (v2.x or higher)</li>
+                            <li>Git (for cloning the repository)</li>
+                            <li>Access to cloud services (for production deployment)</li>
+                        </ul>
+                        
+                        <div class="info-box">
+                            <p><i class="fas fa-info-circle mr-2"></i> For local development, the system will use MinIO instead of Google Cloud Storage, so no cloud credentials are required.</p>
+                        </div>
+                    </div>
+
+                    <div id="docker-setup" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Docker Setup</h3>
+                        <h4 class="font-semibold mb-2">Dockerfile</h4>
+                        <p class="mb-2">Create a Dockerfile in the root directory of the project:</p>
+                        <div class="code-block mb-6">
+                            <pre>
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN chown -R appuser:appuser /app
+USER appuser
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8000
+
+# Expose the application port
+EXPOSE 8000
+
+# Run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Docker Compose</h4>
+                        <p class="mb-2">Create a docker-compose.yml file for managing the services:</p>
+                        <div class="code-block mb-4">
+                            <pre>
+version: '3.8'
+
+services:
+  # FastAPI Application
+  app:
+    build: .
+    container_name: image-management-api
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - minio
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres/imagedb
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - BUCKET_NAME=image-management-api-local
+      - USE_MINIO=true
+      - CHROMA_PERSIST_DIRECTORY=/app/data/chroma
+      - ENABLE_REAL_EMBEDDINGS=true
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14
+    container_name: image-management-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=imagedb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  # MinIO Object Storage (S3 compatible)
+  minio:
+    image: minio/minio
+    container_name: image-management-storage
+    restart: always
+    command: server --console-address ":9001" /data
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - app-network
+
+  # Initialize MinIO buckets
+  createbuckets:
+    image: minio/mc
+    container_name: image-management-init-bucket
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb myminio/image-management-api-local --ignore-existing;
+      /usr/bin/mc anonymous set download myminio/image-management-api-local;
+      exit 0;
+      "
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  minio-data:
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">.dockerignore</h4>
+                        <p class="mb-2">Create a .dockerignore file to exclude unnecessary files:</p>
+                        <div class="code-block">
+                            <pre>
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Data directories
+data/
+uploads/
+chroma_db/
+
+# Development
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Documentation
+README.md
+docs/
+*.md
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="configuration" class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Configuration</h3>
+                        <h4 class="font-semibold mb-2">Environment Variables</h4>
+                        <p class="mb-2">Create a .env file for local development:</p>
+                        <div class="code-block mb-6">
+                            <pre>
+# Database
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost/imagedb
+
+# Storage configuration
+USE_MINIO=true
+MINIO_ENDPOINT=http://localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+BUCKET_NAME=image-management-api-local
+
+# For production with GCS
+# USE_MINIO=false
+# GCS_BUCKET_NAME=your-production-bucket
+# GOOGLE_APPLICATION_CREDENTIALS=path/to/credentials.json
+
+# Vector database
+CHROMA_PERSIST_DIRECTORY=./data/chroma
+CHROMA_COLLECTION_NAME=image_embeddings
+EMBEDDING_MODEL=clip
+EMBEDDING_DIMENSION=512
+ENABLE_REAL_EMBEDDINGS=true
+
+# API settings
+API_TITLE=Image Management API
+API_DESCRIPTION=API for managing and searching images with semantic capabilities
+API_VERSION=1.0.0
+DEBUG=false
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Database Migrations</h4>
+                        <p class="mb-2">Create an alembic.ini file for database migrations:</p>
+                        <div class="code-block">
+                            <pre>
+[alembic]
+script_location = migrations
+prepend_sys_path = .
+version_path_separator = os
+
+[loggers]
+keys = root,sqlalchemy,alembic
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARN
+handlers = console
+qualname =
+
+[logger_sqlalchemy]
+level = WARN
+handlers =
+qualname = sqlalchemy.engine
+
+[logger_alembic]
+level = INFO
+handlers =
+qualname = alembic
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(levelname)-5.5s [%(name)s] %(message)s
+datefmt = %H:%M:%S
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div id="deployment" class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Deployment</h3>
+                        <h4 class="font-semibold mb-2">Starting the Services</h4>
+                        <p class="mb-4">To start all services, run the following command:</p>
+                        <div class="code-block mb-6">
+                            <pre>
+# Start all services in detached mode
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Database Initialization</h4>
+                        <p class="mb-4">Initialize the database and run migrations:</p>
+                        <div class="code-block mb-6">
+                            <pre>
+# Enter the app container
+docker-compose exec app bash
+
+# Create migrations directory if it doesn't exist
+mkdir -p migrations/versions
+
+# Initialize alembic
+alembic init migrations
+
+# Generate migration
+alembic revision --autogenerate -m "Initial migration"
+
+# Run migration
+alembic upgrade head
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Verifying Installation</h4>
+                        <p class="mb-4">Verify that all services are running properly:</p>
+                        <div class="code-block mb-4">
+                            <pre>
+# Check container status
+docker-compose ps
+
+# Test the API
+curl http://localhost:8000/health
+
+# Access the API documentation
+open http://localhost:8000/docs
+                            </pre>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">Production Deployment</h4>
+                        <p class="mb-4">For production deployment, update the environment variables:</p>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li>Set <code>USE_MINIO=false</code></li>
+                            <li>Configure <code>GCS_BUCKET_NAME</code></li>
+                            <li>Add proper credentials for GCS</li>
+                            <li>Ensure database connection string is secure</li>
+                            <li>Set up a proper reverse proxy (Nginx, Traefik)</li>
+                            <li>Configure SSL certificates for secure connections</li>
+                        </ul>
+                        
+                        <div class="warning-box">
+                            <p><i class="fas fa-exclamation-triangle mr-2"></i> For production use, never expose the database or MinIO ports directly. Use internal Docker networking and a proper reverse proxy.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="best-practices" class="mb-12">
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Best Practices</h2>
+                        <p class="mb-4">
+                            This section outlines best practices for working with and extending the Image Management API.
+                            Following these guidelines will help maintain code quality and system performance.
+                        </p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Development Guidelines</h3>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li class="mb-2">
+                                <strong>Asynchronous Programming</strong> - Always use async/await patterns for IO-bound operations to maintain performance.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Error Handling</strong> - Use try-except blocks and proper logging for all external service interactions.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Type Hints</strong> - Add proper type hints to all functions for better IDE support and code documentation.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Unit Testing</strong> - Write tests for all critical paths, especially for embedding generation and search functionality.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Code Organization</strong> - Keep modules focused on specific functionality. Avoid circular imports.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Performance Optimization</h3>
+                        <ul class="list-disc pl-5 mb-4">
+                            <li class="mb-2">
+                                <strong>Caching</strong> - Implement Redis caching for frequently accessed embeddings and images.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Batch Processing</strong> - For bulk operations, use batch processing to reduce database round trips.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Background Tasks</strong> - Use FastAPI background tasks for long-running operations like embedding generation.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Pagination</strong> - Always implement pagination for endpoints that return multiple items.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Database Indexing</strong> - Add appropriate indexes to database tables for query optimization.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Security Best Practices</h3>
+                        <ul class="list-disc pl-5">
+                            <li class="mb-2">
+                                <strong>API Key Management</strong> - Rotate API keys regularly and enforce key expiration for security.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Input Validation</strong> - Always validate and sanitize user inputs, especially file uploads.
+                            </li>
+                            <li class="mb-2">
+                                <strong>CORS Configuration</strong> - Restrict CORS settings to only allow trusted domains in production.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Rate Limiting</strong> - Implement rate limiting to prevent abuse of the API endpoints.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Audit Logging</strong> - Maintain comprehensive logs of all API access and critical operations.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Secure Connections</strong> - Always use HTTPS in production with valid SSL certificates.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Secret Management</strong> - Use a secure secret management system rather than environment variables for production.
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="troubleshooting" class="mb-12">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Troubleshooting</h2>
+                        <div class="mb-6">
+                            <h3 class="text-xl font-semibold mb-4">Common Issues</h3>
+                            <div class="mb-4">
+                                <h4 class="font-semibold mb-2">Database Connection Problems</h4>
+                                <div class="pl-4">
+                                    <p class="mb-2"><strong>Symptoms:</strong> Application fails to start with database connection errors.</p>
+                                    <p class="mb-2"><strong>Solution:</strong></p>
+                                    <ol class="list-decimal pl-5">
+                                        <li>Check if PostgreSQL container is running: <code>docker-compose ps postgres</code></li>
+                                        <li>Verify DATABASE_URL environment variable in .env and docker-compose.yml</li>
+                                        <li>Check PostgreSQL logs: <code>docker-compose logs postgres</code></li>
+                                        <li>Try connecting directly: <code>docker-compose exec postgres psql -U postgres imagedb</code></li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h4 class="font-semibold mb-2">Storage Access Issues</h4>
+                                <div class="pl-4">
+                                    <p class="mb-2"><strong>Symptoms:</strong> Image uploads fail or signed URLs don't work.</p>
+                                    <p class="mb-2"><strong>Solution:</strong></p>
+                                    <ol class="list-decimal pl-5">
+                                        <li>Check MinIO or GCS configuration in environment variables</li>
+                                        <li>For MinIO, verify it's running: <code>docker-compose ps minio</code></li>
+                                        <li>Check that buckets were created correctly: <code>docker-compose exec app mc ls myminio</code></li>
+                                        <li>For GCS, verify credentials file and permissions</li>
+                                        <li>Increase log level for storage module to debug issues</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold mb-2">Vector DB Issues</h4>
+                                <div class="pl-4">
+                                    <p class="mb-2"><strong>Symptoms:</strong> Semantic search not working or returning empty results.</p>
+                                    <p class="mb-2"><strong>Solution:</strong></p>
+                                    <ol class="list-decimal pl-5">
+                                        <li>Check if ChromaDB is initialized: look for logs about successful initialization</li>
+                                        <li>Verify persistence directory is mounted correctly in Docker</li>
+                                        <li>Try disabling real embeddings temporarily to test with mock data</li>
+                                        <li>Check model loading errors in logs</li>
+                                        <li>For production issues, consider using a dedicated ChromaDB service</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Debugging Tips</h3>
+                            <ul class="list-disc pl-5">
+                                <li class="mb-2">
+                                    <strong>Enable Debug Logging</strong> - Set DEBUG=true in environment variables for detailed logs
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Check Container Logs</strong> - Use <code>docker-compose logs -f [service]</code> to monitor specific services
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Interactive Debugging</strong> - Access containers with <code>docker-compose exec app bash</code> and use Python REPL
+                                </li>
+                                <li class="mb-2">
+                                    <strong>API Testing</strong> - Use OpenAPI docs at <code>/docs</code> for interactive API testing
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Database Inspection</strong> - Connect to PostgreSQL with <code>docker-compose exec postgres psql -U postgres imagedb</code>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <footer class="bg-white mt-12 pt-8 pb-6 px-6 border-t border-gray-200">
+        <div class="container mx-auto max-w-4xl">
+            <div class="flex flex-col md:flex-row justify-between mb-6">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-3">Image Management API Documentation</h3>
+                    <p class="text-gray-600">
+                        A comprehensive solution for storing, managing, and searching images with advanced semantic capabilities.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-3">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#overview" class="text-blue-600 hover:text-blue-800">Overview</a></li>
+                        <li><a href="#architecture" class="text-blue-600 hover:text-blue-800">Architecture</a></li>
+                        <li><a href="#api-endpoints" class="text-blue-600 hover:text-blue-800">API Reference</a></li>
+                        <li><a href="#installation" class="text-blue-600 hover:text-blue-800">Installation Guide</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="text-center pt-4 border-t border-gray-200">
+                <p class="text-sm text-gray-600">
+                    Image Management API Documentation &copy; 2024
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Highlight current section in navigation
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Tab functionality
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].style.display = "none";
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+            
+            // Show the current tab and add active class
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+</html>

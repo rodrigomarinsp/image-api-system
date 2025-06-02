@@ -1,0 +1,42 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/image-api:$TAG_NAME', '.']
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/image-api:$TAG_NAME']
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'image-api'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/image-api:$TAG_NAME'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--port'
+      - '8080'
+      - '--service-account'
+      - 'image-api-sa@$PROJECT_ID.iam.gserviceaccount.com'
+      - '--set-env-vars'
+      - 'DATABASE_URL=$$DATABASE_URL,STORAGE_BUCKET=image-api-images,GCS_BUCKET_NAME=image-api-images,USE_MINIO=false'
+
+substitutions:
+  _REGION: europe-west3
+  
+images:
+  - 'gcr.io/$PROJECT_ID/image-api:$TAG_NAME'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

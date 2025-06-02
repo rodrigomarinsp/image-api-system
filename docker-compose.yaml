@@ -1,0 +1,134 @@
+services:
+  # FastAPI Application
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    environment:
+      # Database Configuration
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/image_api
+      
+      # Storage Configuration
+      - GCS_BUCKET_NAME=image-management-api-local
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=minio123
+      - USE_MINIO=true
+      
+      # Vector Database Configuration (ChromaDB)
+      - CHROMA_PERSIST_DIRECTORY=/app/data/chroma_db
+      - CHROMA_COLLECTION_NAME=image_embeddings
+      
+      # Embedding Model Configuration
+      - EMBEDDING_MODEL=clip
+      - EMBEDDING_DIMENSION=512
+      - ENABLE_REAL_EMBEDDINGS=false
+      
+      # Search Configuration
+      - SEARCH_CACHE_EXPIRY=3600
+      - SEARCH_RESULT_LIMIT=100
+      - SIMILARITY_THRESHOLD=0.6
+      
+      # Application Settings
+      - LOG_LEVEL=INFO
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app
+      - chroma_data:/app/data/chroma_db
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/system-check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # PostgreSQL Database
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=image_api
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: always
+
+  # MinIO for local storage (S3 compatible)
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 10s
+    restart: always
+
+  # Set up MinIO bucket
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+        sleep 5;
+        /usr/bin/mc config host add myminio http://minio:9000 minio minio123;
+        /usr/bin/mc mb myminio/image-management-api-local --ignore-existing;
+        /usr/bin/mc policy set public myminio/image-management-api-local;
+        exit 0;
+      "
+    restart: on-failure
+
+  # Adminer for database management (optional)
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+      - ADMINER_DESIGN=flat
+    depends_on:
+      - db
+    restart: always
+
+  # MinIO setup for a local blob storage tester (optional)
+  minio-client:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+        mc config host add myminio http://minio:9000 minio minio123;
+        while true; do sleep 3600; done
+      "
+    restart: on-failure
+
+volumes:
+  postgres_data:
+  minio_data:
+  chroma_data:

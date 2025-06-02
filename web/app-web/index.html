@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Management API Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-okaidia.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2874A6;
+            --secondary: #AED6F1;
+            --light: #EBF5FB;
+            --dark: #1B4F72;
+            --text: #34495E;
+            --code-bg: #2C3E50;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
+        }
+        .bg-primary {
+            background-color: var(--primary);
+        }
+        .bg-secondary {
+            background-color: var(--secondary);
+        }
+        .bg-light {
+            background-color: var(--light);
+        }
+        .text-primary {
+            color: var(--primary);
+        }
+        .border-primary {
+            border-color: var(--primary);
+        }
+        .heading {
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+        .subheading {
+            color: var(--dark);
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        pre {
+            background-color: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        th {
+            background-color: var(--secondary);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--secondary);
+        }
+        .sidebar {
+            position: fixed;
+            top: 4rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            padding-bottom: 2rem;
+            width: 250px;
+        }
+        .content {
+            margin-left: 260px;
+            padding: 2rem;
+            padding-top: 5rem;
+        }
+        .endpoint {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .get {
+            border-left-color: #3498DB;
+        }
+        .post {
+            border-left-color: #2ECC71;
+        }
+        .put {
+            border-left-color: #F39C12;
+        }
+        .delete {
+            border-left-color: #E74C3C;
+        }
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            color: white;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        .get-bg {
+            background-color: #3498DB;
+        }
+        .post-bg {
+            background-color: #2ECC71;
+        }
+        .put-bg {
+            background-color: #F39C12;
+        }
+        .delete-bg {
+            background-color: #E74C3C;
+        }
+        .card {
+            border: 1px solid var(--secondary);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            border: 1px solid var(--secondary);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            border-left: 3px solid transparent;
+        }
+        .nav-link:hover, .nav-link:focus {
+            background-color: var(--light);
+            border-left-color: var(--primary);
+        }
+        .nav-link.active {
+            background-color: var(--light);
+            border-left-color: var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .nav-section {
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--secondary);
+            margin-top: 0.5rem;
+        }
+        .code-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+                padding: 1rem;
+                padding-top: 5rem;
+            }
+            .sidebar {
+                display: none;
+            }
+            .mobile-nav {
+                display: block;
+            }
+        }
+        .mobile-nav {
+            display: none;
+        }
+        :target {
+            scroll-margin-top: 5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-primary text-white fixed w-full top-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Image Management API</h1>
+            <div class="flex space-x-4">
+                <a href="#overview" class="text-white hover:text-gray-200">Overview</a>
+                <a href="#installation" class="text-white hover:text-gray-200">Installation</a>
+                <a href="#api-reference" class="text-white hover:text-gray-200">API Reference</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar bg-white shadow-md hidden md:block">
+        <div class="nav-section">Main Sections</div>
+        <a href="#overview" class="nav-link">Overview</a>
+        <a href="#architecture" class="nav-link">System Architecture</a>
+        <a href="#installation" class="nav-link">Installation Guide</a>
+        <a href="#configuration" class="nav-link">Configuration</a>
+        <a href="#docker" class="nav-link">Docker Deployment</a>
+        
+        <div class="nav-section">API Reference</div>
+        <a href="#api-authentication" class="nav-link">Authentication</a>
+        <a href="#api-teams" class="nav-link">Teams</a>
+        <a href="#api-users" class="nav-link">Users</a>
+        <a href="#api-apikeys" class="nav-link">API Keys</a>
+        <a href="#api-images" class="nav-link">Images</a>
+        <a href="#api-search" class="nav-link">Semantic Search</a>
+        
+        <div class="nav-section">Components</div>
+        <a href="#comp-main" class="nav-link">Main Application</a>
+        <a href="#comp-database" class="nav-link">Database</a>
+        <a href="#comp-auth" class="nav-link">Authentication</a>
+        <a href="#comp-storage" class="nav-link">Storage</a>
+        <a href="#comp-image-understanding" class="nav-link">Image Understanding</a>
+        <a href="#comp-vector-db" class="nav-link">Vector Database</a>
+        <a href="#comp-semantic-search" class="nav-link">Semantic Search</a>
+        <a href="#comp-visualization" class="nav-link">Visualization</a>
+        
+        <div class="nav-section">Advanced Topics</div>
+        <a href="#best-practices" class="nav-link">Best Practices</a>
+        <a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+    </nav>
+
+    <!-- Mobile Navigation Toggle -->
+    <div class="mobile-nav fixed bottom-4 right-4 z-50">
+        <button class="bg-primary text-white p-4 rounded-full shadow-lg">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="content">
+        <section id="overview">
+            <h2 class="text-3xl heading">Overview</h2>
+            <p class="mb-4">
+                The Image Management API is a comprehensive solution for handling images with powerful semantic search capabilities. 
+                Built with FastAPI, this API provides robust endpoints for image upload, retrieval, and advanced semantic search functionality 
+                using vector embeddings and ChromaDB technology.
+            </p>
+            
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-2">Key Features</h3>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><span class="font-medium">Image Management:</span> Upload, retrieve, update, and delete images with metadata management</li>
+                    <li><span class="font-medium">Semantic Search:</span> Search images using text queries or similar image comparison</li>
+                    <li><span class="font-medium">Vector Embeddings:</span> Generate and store image embeddings for efficient similarity search</li>
+                    <li><span class="font-medium">Team Collaboration:</span> Multi-user support with team-based access controls</li>
+                    <li><span class="font-medium">Cloud Storage:</span> Integration with Google Cloud Storage and AWS S3</li>
+                    <li><span class="font-medium">Authentication:</span> Secure API key-based authentication system</li>
+                    <li><span class="font-medium">Visualization:</span> Tools for visualizing vector embeddings and search results</li>
+                </ul>
+            </div>
+            
+            <p class="mb-4">
+                This documentation provides comprehensive information about the API's architecture, installation process,
+                configuration options, API endpoints, and technical details about each component.
+            </p>
+        </section>
+
+        <section id="architecture">
+            <h2 class="text-3xl heading">System Architecture</h2>
+            <p class="mb-4">
+                The Image Management API is built with a modular architecture, consisting of several core components that work together
+                to provide a complete image management and search solution.
+            </p>
+            
+            <div class="diagram bg-white">
+                <h3 class="text-xl font-semibold mb-4 text-center">Architecture Diagram</h3>
+                <div class="text-center">
+                    <img src="https://cdn1.genspark.ai/user-upload-image/jupyter/tooluse_CKCtzBDRSXuDG8TTylbdmg/nb_display/0_0.png" alt="System Architecture Diagram" class="mx-auto max-w-full">
+                    <p class="text-sm text-gray-500 mt-2">Image Management API System Architecture</p>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl subheading mt-8">Database Schema</h3>
+            <p class="mb-4">
+                The database schema includes six main tables that store user information, teams, API keys, images, image embeddings, and access logs.
+            </p>
+            
+            <div class="diagram bg-white">
+                <h3 class="text-xl font-semibold mb-4 text-center">Database Schema Diagram</h3>
+                <div class="text-center">
+                    <img src="https://cdn1.genspark.ai/user-upload-image/jupyter/tooluse_J7WULJycTG6AZI9ljloY7w/nb_display/0_0.png" alt="Database Schema Diagram" class="mx-auto max-w-full">
+                    <p class="text-sm text-gray-500 mt-2">Image Management API Database Schema</p>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl subheading mt-8">Component Overview</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-box mr-2"></i> Main Application (main.py)</h4>
+                    <p>Core FastAPI application that initializes the API, includes routers, and configures middleware.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-lock mr-2"></i> Authentication (auth.py)</h4>
+                    <p>Handles API key authentication, user authentication, and access control.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-database mr-2"></i> Database (database.py)</h4>
+                    <p>Manages database connections, models, and core database utilities using SQLAlchemy.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-cloud mr-2"></i> Storage (storage.py)</h4>
+                    <p>Handles cloud storage integration for storing and retrieving image files.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-image mr-2"></i> Image Understanding (image_understanding.py)</h4>
+                    <p>Processes images for understanding using computer vision models and generates embeddings.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-database mr-2"></i> Vector Database (vector_db.py)</h4>
+                    <p>Provides vector database functionality using ChromaDB for storing and retrieving image embeddings.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-search mr-2"></i> Semantic Search (semantic_search.py)</h4>
+                    <p>Implements advanced semantic search capabilities for images using embeddings.</p>
+                </div>
+                <div class="card">
+                    <h4 class="text-lg font-semibold mb-2 text-primary"><i class="fas fa-chart-bar mr-2"></i> Visualization (visualization_simple.py)</h4>
+                    <p>Provides visualization tools for image embeddings and search results.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation">
+            <h2 class="text-3xl heading">Installation Guide</h2>
+            <p class="mb-4">
+                The Image Management API can be installed and deployed in several ways. The recommended approach is using Docker,
+                which simplifies the setup process and ensures consistent environments.
+            </p>
+            
+            <h3 class="text-2xl subheading">Prerequisites</h3>
+            <ul class="list-disc pl-5 space-y-2 mb-6">
+                <li>Python 3.8+ (if installing without Docker)</li>
+                <li>PostgreSQL database</li>
+                <li>Docker and Docker Compose (for containerized deployment)</li>
+                <li>Google Cloud Storage account or AWS S3 bucket (for cloud storage)</li>
+            </ul>
+            
+            <h3 class="text-2xl subheading">Option 1: Local Development Setup</h3>
+            <div class="code-container">
+                <pre><code>git clone [your-repository-url]
+cd image-management-api
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env file with your configuration
+
+# Run the application
+uvicorn main:app --reload</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+            </div>
+            
+            <h3 class="text-2xl subheading" id="docker">Option 2: Docker Deployment</h3>
+            <p class="mb-4">
+                Docker provides an isolated, consistent environment for running the API. The project includes
+                Dockerfile and docker-compose.yml files for easy deployment.
+            </p>
+            
+            <h4 class="text-xl font-semibold mt-4 mb-2">Dockerfile</h4>
+            <div class="code-container">
+                <pre><code>FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+
+# Expose the port
+EXPOSE 8000
+
+# Run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+            </div>
+            
+            <h4 class="text-xl font-semibold mt-6 mb-2">Docker Compose Configuration</h4>
+            <div class="code-container">
+                <pre><code>version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - chroma
+    restart: always
+
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    restart: always
+
+  chroma:
+    image: chromadb/chroma:latest
+    volumes:
+      - chroma_data:/chroma/data
+    ports:
+      - "8081:8081"
+    restart: always
+
+  minio:
+    image: minio/minio
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    command: server /data --console-address ":9001"
+    restart: always
+
+volumes:
+  postgres_data:
+  chroma_data:
+  minio_data:</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+            </div>
+            
+            <h4 class="text-xl font-semibold mt-6 mb-2">Running with Docker Compose</h4>
+            <div class="code-container">
+                <pre><code># Build and start the containers
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop containers
+docker-compose down</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+            </div>
+        </section>
+
+        <section id="configuration">
+            <h2 class="text-3xl heading">Configuration</h2>
+            <p class="mb-4">
+                The Image Management API uses environment variables for configuration. Create a .env file in the root directory
+                with the following variables:
+            </p>
+            
+            <div class="code-container">
+                <pre><code># Database Configuration
+DATABASE_URL=postgresql+asyncpg://username:password@host:port/dbname
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=image_management
+DB_HOST=db
+DB_PORT=5432
+
+# Storage Configuration
+STORAGE_PROVIDER=gcs  # or 's3' or 'minio'
+GCS_BUCKET_NAME=your-bucket-name
+GCS_CREDENTIALS_FILE=path/to/credentials.json
+
+# For S3
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_BUCKET_NAME=your-s3-bucket
+AWS_REGION=your-region
+
+# For MinIO (local development)
+MINIO_ENDPOINT=http://minio:9000
+MINIO_ACCESS_KEY=minio
+MINIO_SECRET_KEY=minio123
+MINIO_BUCKET_NAME=image-management-api-local
+
+# Vector Database Configuration
+CHROMA_PERSIST_DIRECTORY=./chroma_db
+CHROMA_COLLECTION_NAME=image_embeddings
+EMBEDDING_MODEL=clip  # or other models
+EMBEDDING_DIMENSION=512
+
+# API Configuration
+API_TITLE=Image Management API
+API_DESCRIPTION=API for image management with semantic search capabilities
+API_VERSION=1.0.0
+ALLOWED_ORIGINS=http://localhost:3000,https://your-frontend-domain.com
+
+# Security
+SECRET_KEY=your_secret_key_for_token_generation
+TOKEN_EXPIRY_DAYS=30</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+            </div>
+        </section>
+
+        <section id="api-reference">
+            <h2 class="text-3xl heading">API Reference</h2>
+            <p class="mb-4">
+                The Image Management API provides endpoints for managing images, teams, users, API keys, and semantic search functionality.
+                All endpoints are prefixed with <code>/api/v1</code>.
+            </p>
+            
+            <section id="api-authentication">
+                <h3 class="text-2xl subheading">Authentication</h3>
+                <p class="mb-4">
+                    The API uses API key authentication. Include the API key in the Authorization header with each request.
+                </p>
+                
+                <div class="code-container">
+                    <pre><code>Authorization: Bearer your_api_key</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-4">Obtaining an API Key</h4>
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/api-keys</code>
+                    </div>
+                    <p class="mt-2">Create a new API key for a user</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "name": "My API Key",
+  "expires_in_days": 30  // optional, defaults to system setting
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                    <h5 class="font-medium mt-2">Response:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "key": "imapi_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  "name": "My API Key",
+  "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "active": true,
+  "created_at": "2023-11-01T12:00:00.000Z",
+  "expires_at": "2023-12-01T12:00:00.000Z"
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="api-teams">
+                <h3 class="text-2xl subheading">Teams</h3>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/teams</code>
+                    </div>
+                    <p class="mt-2">Create a new team</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "name": "Marketing Team",
+  "description": "Team for marketing assets"
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/teams</code>
+                    </div>
+                    <p class="mt-2">List all teams</p>
+                    <h5 class="font-medium mt-2">Query Parameters:</h5>
+                    <ul class="list-disc pl-5">
+                        <li>skip (integer): Number of records to skip (default: 0)</li>
+                        <li>limit (integer): Maximum number of records to return (default: 100)</li>
+                    </ul>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/teams/{team_id}</code>
+                    </div>
+                    <p class="mt-2">Get team by ID</p>
+                </div>
+                
+                <div class="endpoint put">
+                    <div>
+                        <span class="method put-bg">PUT</span>
+                        <code>/api/v1/teams/{team_id}</code>
+                    </div>
+                    <p class="mt-2">Update team details</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "name": "Updated Team Name",
+  "description": "Updated team description"
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint delete">
+                    <div>
+                        <span class="method delete-bg">DELETE</span>
+                        <code>/api/v1/teams/{team_id}</code>
+                    </div>
+                    <p class="mt-2">Delete a team</p>
+                </div>
+            </section>
+            
+            <section id="api-users">
+                <h3 class="text-2xl subheading">Users</h3>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/users</code>
+                    </div>
+                    <p class="mt-2">Create a new user</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "username": "johndoe",
+  "email": "john.doe@example.com",
+  "full_name": "John Doe",
+  "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/users</code>
+                    </div>
+                    <p class="mt-2">List all users</p>
+                    <h5 class="font-medium mt-2">Query Parameters:</h5>
+                    <ul class="list-disc pl-5">
+                        <li>skip (integer): Number of records to skip (default: 0)</li>
+                        <li>limit (integer): Maximum number of records to return (default: 100)</li>
+                        <li>team_id (string): Filter users by team ID</li>
+                    </ul>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/users/{user_id}</code>
+                    </div>
+                    <p class="mt-2">Get user by ID</p>
+                </div>
+                
+                <div class="endpoint put">
+                    <div>
+                        <span class="method put-bg">PUT</span>
+                        <code>/api/v1/users/{user_id}</code>
+                    </div>
+                    <p class="mt-2">Update user details</p>
+                </div>
+                
+                <div class="endpoint delete">
+                    <div>
+                        <span class="method delete-bg">DELETE</span>
+                        <code>/api/v1/users/{user_id}</code>
+                    </div>
+                    <p class="mt-2">Delete a user</p>
+                </div>
+            </section>
+            
+            <section id="api-apikeys">
+                <h3 class="text-2xl subheading">API Keys</h3>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/api-keys</code>
+                    </div>
+                    <p class="mt-2">List all API keys for the current user</p>
+                </div>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/api-keys</code>
+                    </div>
+                    <p class="mt-2">Create a new API key</p>
+                </div>
+                
+                <div class="endpoint delete">
+                    <div>
+                        <span class="method delete-bg">DELETE</span>
+                        <code>/api/v1/api-keys/{key_id}</code>
+                    </div>
+                    <p class="mt-2">Revoke/delete an API key</p>
+                </div>
+            </section>
+            
+            <section id="api-images">
+                <h3 class="text-2xl subheading">Images</h3>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/images</code>
+                    </div>
+                    <p class="mt-2">Upload a new image</p>
+                    <h5 class="font-medium mt-2">Form Data:</h5>
+                    <ul class="list-disc pl-5">
+                        <li>file (file): The image file to upload</li>
+                        <li>metadata (JSON string, optional): Additional metadata for the image</li>
+                        <li>team_id (string, optional): ID of the team the image belongs to</li>
+                        <li>generate_embedding (boolean, optional): Whether to generate vector embeddings</li>
+                        <li>embedding_model (string, optional): Model to use for generating embeddings</li>
+                    </ul>
+                    <h5 class="font-medium mt-2">Response:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "filename": "example.jpg",
+  "file_url": "https://storage-url.com/example.jpg",
+  "file_size": 1024,
+  "content_type": "image/jpeg",
+  "metadata": {
+    "width": 800,
+    "height": 600,
+    "tags": ["example", "sample"]
+  },
+  "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "created_at": "2023-11-01T12:00:00.000Z",
+  "embedding_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/images</code>
+                    </div>
+                    <p class="mt-2">List all images with filtering options</p>
+                    <h5 class="font-medium mt-2">Query Parameters:</h5>
+                    <ul class="list-disc pl-5">
+                        <li>skip (integer): Number of records to skip</li>
+                        <li>limit (integer): Maximum number of records to return</li>
+                        <li>team_id (string): Filter by team ID</li>
+                        <li>user_id (string): Filter by user ID</li>
+                        <li>has_embedding (boolean): Filter by whether the image has embeddings</li>
+                        <li>content_type (string): Filter by MIME type</li>
+                    </ul>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/images/{image_id}</code>
+                    </div>
+                    <p class="mt-2">Get image by ID</p>
+                </div>
+                
+                <div class="endpoint put">
+                    <div>
+                        <span class="method put-bg">PUT</span>
+                        <code>/api/v1/images/{image_id}</code>
+                    </div>
+                    <p class="mt-2">Update image metadata</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "metadata": {
+    "tags": ["updated", "tags"],
+    "description": "Updated image description"
+  }
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint delete">
+                    <div>
+                        <span class="method delete-bg">DELETE</span>
+                        <code>/api/v1/images/{image_id}</code>
+                    </div>
+                    <p class="mt-2">Delete an image</p>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/images/{image_id}/embedding</code>
+                    </div>
+                    <p class="mt-2">Get image embedding data</p>
+                </div>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/images/{image_id}/embedding</code>
+                    </div>
+                    <p class="mt-2">Generate embedding for an existing image</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "model": "clip",  // optional, defaults to system setting
+  "force": false    // whether to regenerate if embedding exists
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="api-search">
+                <h3 class="text-2xl subheading">Semantic Search</h3>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/search/text</code>
+                    </div>
+                    <p class="mt-2">Search images by text query</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "query": "blue sky with mountains",
+  "limit": 20,
+  "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  // optional filter
+  "threshold": 0.7,  // minimum similarity score (0-1)
+  "include_metadata": true
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/search/image</code>
+                    </div>
+                    <p class="mt-2">Search images by similarity to an uploaded image</p>
+                    <h5 class="font-medium mt-2">Form Data:</h5>
+                    <ul class="list-disc pl-5">
+                        <li>file (file): Query image file</li>
+                        <li>limit (integer): Maximum number of results</li>
+                        <li>team_id (string, optional): Filter by team ID</li>
+                        <li>threshold (float): Minimum similarity score (0-1)</li>
+                    </ul>
+                </div>
+                
+                <div class="endpoint post">
+                    <div>
+                        <span class="method post-bg">POST</span>
+                        <code>/api/v1/search/by-id</code>
+                    </div>
+                    <p class="mt-2">Search for images similar to an existing image</p>
+                    <h5 class="font-medium mt-2">Request Body:</h5>
+                    <div class="code-container">
+                        <pre><code>{
+  "image_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "limit": 20,
+  "team_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",  // optional filter
+  "threshold": 0.7  // minimum similarity score (0-1)
+}</code></pre>
+                        <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="endpoint get">
+                    <div>
+                        <span class="method get-bg">GET</span>
+                        <code>/api/v1/search/visualization</code>
+                    </div>
+                    <p class="mt-2">Generate a visualization of image embeddings</p>
+                    <h5 class="font-medium mt-2">Query Parameters:</h5>
+                    <ul class="list-disc pl-5">
+                        <li>team_id (string, optional): Filter by team ID</li>
+                        <li>method (string): Visualization method ("pca", "tsne", or "umap")</li>
+                        <li>include_images (boolean): Whether to include image thumbnails in the visualization</li>
+                    </ul>
+                </div>
+            </section>
+        </section>
+
+        <section id="component-details">
+            <h2 class="text-3xl heading">Component Details</h2>
+            
+            <section id="comp-main">
+                <h3 class="text-2xl subheading">Main Application (main.py)</h3>
+                <p class="mb-4">
+                    The main module initializes the FastAPI application, configures middleware, and includes all routers.
+                    It serves as the entry point for the API.
+                </p>
+                <div class="code-container">
+                    <pre><code>import logging
+import asyncio
+from fastapi import FastAPI, Request, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+# Import routers
+from routers import team_router, user_router, api_key_router, image_router, search_router
+
+# Create FastAPI application
+app = FastAPI(
+    title="Image Management API",
+    description="API for image management with semantic search capabilities",
+    version="1.0.0"
+)
+
+# Configure CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Set to specific origins in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers with /api/v1 prefix
+app.include_router(team_router, prefix="/api/v1", tags=["Teams"])
+app.include_router(user_router, prefix="/api/v1", tags=["Users"])
+app.include_router(api_key_router, prefix="/api/v1", tags=["API Keys"])
+app.include_router(image_router, prefix="/api/v1", tags=["Images"])
+app.include_router(search_router, prefix="/api/v1", tags=["Semantic Search"])
+
+# Startup and shutdown events
+@app.on_event("startup")
+async def startup_event():
+    # Initialize database, vector DB, etc.
+    pass
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    # Clean up resources
+    pass</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-database">
+                <h3 class="text-2xl subheading">Database (database.py)</h3>
+                <p class="mb-4">
+                    The database module handles connection configuration, SQLAlchemy models, and core database utilities.
+                    It uses PostgreSQL with async support via asyncpg.
+                </p>
+                <h4 class="text-xl font-semibold mt-4">Key Models</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">User</h5>
+                        <ul class="list-disc pl-5">
+                            <li>id (UUID, primary key)</li>
+                            <li>username (String, unique)</li>
+                            <li>email (String, unique)</li>
+                            <li>full_name (String)</li>
+                            <li>team_id (UUID, foreign key)</li>
+                            <li>created_at (DateTime)</li>
+                            <li>is_active (Boolean)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">Team</h5>
+                        <ul class="list-disc pl-5">
+                            <li>id (UUID, primary key)</li>
+                            <li>name (String)</li>
+                            <li>description (String)</li>
+                            <li>created_at (DateTime)</li>
+                            <li>users (relationship to User)</li>
+                            <li>images (relationship to Image)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">APIKey</h5>
+                        <ul class="list-disc pl-5">
+                            <li>id (UUID, primary key)</li>
+                            <li>key (String, unique)</li>
+                            <li>name (String)</li>
+                            <li>user_id (UUID, foreign key)</li>
+                            <li>active (Boolean)</li>
+                            <li>created_at (DateTime)</li>
+                            <li>expires_at (DateTime)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">Image</h5>
+                        <ul class="list-disc pl-5">
+                            <li>id (UUID, primary key)</li>
+                            <li>filename (String)</li>
+                            <li>file_url (String)</li>
+                            <li>file_size (Integer)</li>
+                            <li>content_type (String)</li>
+                            <li>metadata (JSONB)</li>
+                            <li>user_id (UUID, foreign key)</li>
+                            <li>team_id (UUID, foreign key)</li>
+                            <li>created_at (DateTime)</li>
+                            <li>embedding (relationship to ImageEmbedding)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-2">Database Setup</h4>
+                <div class="code-container">
+                    <pre><code>from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@db:5432/image_management")
+
+# Create async engine
+engine = create_async_engine(DATABASE_URL, echo=True)
+
+# Create sessionmaker
+async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+# Create base model
+Base = declarative_base()
+
+# Database dependency
+async def get_db():
+    async with async_session() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-auth">
+                <h3 class="text-2xl subheading">Authentication (auth.py)</h3>
+                <p class="mb-4">
+                    The authentication module handles API key authentication and access control, ensuring secure access to API endpoints.
+                </p>
+                <div class="code-container">
+                    <pre><code>import uuid
+import secrets
+from fastapi import Depends, HTTPException, status, Header
+from fastapi.security import APIKeyHeader
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+
+from database import get_db, APIKey, User, Team
+
+# API key header schema
+api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
+
+# Generate secure API key
+def generate_api_key() -> str:
+    return f"imapi_{secrets.token_urlsafe(32)}"
+
+# Get current user from API key
+async def get_current_user(
+    authorization: str = Depends(api_key_header),
+    db: AsyncSession = Depends(get_db)
+) -> User:
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    key = authorization.replace("Bearer ", "")
+    
+    # Query the API key
+    result = await db.execute(
+        select(APIKey).where(APIKey.key == key, APIKey.active == True)
+    )
+    api_key = result.scalars().first()
+    
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired API key",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Get the user associated with the API key
+    result = await db.execute(
+        select(User).where(User.id == api_key.user_id, User.is_active == True)
+    )
+    user = result.scalars().first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found or inactive",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    return user
+
+# Verify team access
+async def verify_team_access(
+    team_id: uuid.UUID,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+) -> Team:
+    # Check if user belongs to the team or if team exists
+    result = await db.execute(
+        select(Team).where(Team.id == team_id)
+    )
+    team = result.scalars().first()
+    
+    if not team:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Team not found"
+        )
+    
+    if user.team_id != team.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access to this team's resources denied"
+        )
+    
+    return team</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-storage">
+                <h3 class="text-2xl subheading">Storage (storage.py)</h3>
+                <p class="mb-4">
+                    The storage module handles cloud storage integration for storing and retrieving image files. It supports 
+                    Google Cloud Storage, AWS S3, and MinIO for local development.
+                </p>
+                <h4 class="text-xl font-semibold mt-4 mb-2">Key Functions</h4>
+                <div class="card">
+                    <h5 class="font-semibold mb-2">upload_file_to_storage</h5>
+                    <p>Uploads a file to the configured storage provider and returns the file URL.</p>
+                    <h6 class="font-medium mt-2">Parameters:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>file (UploadFile): The file to upload</li>
+                        <li>team_id (UUID, optional): Team ID for organizing files</li>
+                        <li>user_id (UUID): User ID who uploaded the file</li>
+                        <li>custom_filename (str, optional): Custom filename to use</li>
+                    </ul>
+                    <h6 class="font-medium mt-2">Returns:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>tuple: (file_url, storage_path, content_type, file_size)</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h5 class="font-semibold mb-2">generate_signed_url</h5>
+                    <p>Generates a signed URL for temporary access to a file.</p>
+                    <h6 class="font-medium mt-2">Parameters:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>storage_path (str): Path to the file in storage</li>
+                        <li>expiration (int, optional): Expiration time in seconds</li>
+                    </ul>
+                    <h6 class="font-medium mt-2">Returns:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>str: Signed URL for accessing the file</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h5 class="font-semibold mb-2">delete_file_from_storage</h5>
+                    <p>Deletes a file from storage.</p>
+                    <h6 class="font-medium mt-2">Parameters:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>storage_path (str): Path to the file in storage</li>
+                    </ul>
+                    <h6 class="font-medium mt-2">Returns:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>bool: True if the file was deleted successfully</li>
+                    </ul>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-2">Storage Provider Implementation</h4>
+                <div class="code-container">
+                    <pre><code># Storage provider selection based on configuration
+STORAGE_PROVIDER = os.getenv("STORAGE_PROVIDER", "minio")  # 'gcs', 's3', or 'minio'
+
+# File operations are routed to the appropriate provider
+async def upload_file_to_storage(file, team_id=None, user_id=None, custom_filename=None):
+    if STORAGE_PROVIDER == "gcs":
+        return await upload_file_to_gcs(file, team_id, user_id, custom_filename)
+    elif STORAGE_PROVIDER == "s3":
+        return await upload_file_to_s3(file, team_id, user_id, custom_filename)
+    else:  # Default to MinIO
+        return await upload_file_to_minio(file, team_id, user_id, custom_filename)
+
+async def generate_signed_url(storage_path, expiration=3600):
+    if STORAGE_PROVIDER == "gcs":
+        return generate_signed_url_gcs(storage_path, expiration)
+    elif STORAGE_PROVIDER == "s3":
+        return generate_signed_url_s3(storage_path, expiration)
+    else:  # Default to MinIO
+        return generate_signed_url_minio(storage_path, expiration)
+
+async def delete_file_from_storage(storage_path):
+    if STORAGE_PROVIDER == "gcs":
+        return await delete_file_from_gcs(storage_path)
+    elif STORAGE_PROVIDER == "s3":
+        return await delete_file_from_s3(storage_path)
+    else:  # Default to MinIO
+        return await delete_file_from_minio(storage_path)</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-image-understanding">
+                <h3 class="text-2xl subheading">Image Understanding (image_understanding.py)</h3>
+                <p class="mb-4">
+                    The image understanding module handles image processing and generates vector embeddings for semantic search functionality.
+                    It uses models like CLIP for generating embeddings.
+                </p>
+                <h4 class="text-xl font-semibold mt-4 mb-2">Key Functions</h4>
+                <div class="card">
+                    <h5 class="font-semibold mb-2">generate_image_embedding</h5>
+                    <p>Generates vector embeddings for an image using the specified model.</p>
+                    <h6 class="font-medium mt-2">Parameters:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>image_path (str): Path to the image or URL</li>
+                        <li>model_name (str, optional): Model to use for embedding generation</li>
+                    </ul>
+                    <h6 class="font-medium mt-2">Returns:</h6>
+                    <ul class="list-disc pl-5">
+                        <li>dict: {'embedding': list, 'dimensions': int, 'model': str}</li>
+                    </ul>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-2">Image Embedding Process</h4>
+                <div class="code-container">
+                    <pre><code>import numpy as np
+from sentence_transformers import SentenceTransformer
+from PIL import Image as PILImage
+import io
+import httpx
+
+# Load embedding model
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "clip")
+EMBEDDING_DIMENSION = int(os.getenv("EMBEDDING_DIMENSION", "512"))
+
+# Initialize the embedding model
+model_name = "openai/clip-vit-base-patch32"
+embedding_model = SentenceTransformer(model_name)
+
+async def generate_image_embedding(image_path, model_name=None):
+    """Generate vector embeddings for an image using the specified model"""
+    try:
+        # Load the image (from URL or local path)
+        if image_path.startswith(('http://', 'https://')):
+            async with httpx.AsyncClient() as client:
+                response = await client.get(image_path)
+                image_data = response.content
+                image = PILImage.open(io.BytesIO(image_data))
+        else:
+            image = PILImage.open(image_path)
+        
+        # Generate the embedding
+        embedding_vector = embedding_model.encode(image, convert_to_tensor=True).tolist()
+        
+        return {
+            "embedding": embedding_vector,
+            "dimensions": len(embedding_vector),
+            "model": model_name or EMBEDDING_MODEL,
+        }
+    except Exception as e:
+        logger.error(f"Error generating embedding: {e}")
+        raise</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-vector-db">
+                <h3 class="text-2xl subheading">Vector Database (vector_db.py)</h3>
+                <p class="mb-4">
+                    The vector database module provides functionality for storing and retrieving vector embeddings using ChromaDB.
+                </p>
+                <h4 class="text-xl font-semibold mt-4 mb-2">Key Functions</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">add_embedding</h5>
+                        <p>Adds a new embedding vector to the database.</p>
+                        <h6 class="font-medium mt-2">Parameters:</h6>
+                        <ul class="list-disc pl-5">
+                            <li>id (str): Unique ID for the embedding</li>
+                            <li>embedding (list): Vector embedding</li>
+                            <li>metadata (dict): Additional metadata</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">search_by_embedding</h5>
+                        <p>Searches for similar vectors in the database.</p>
+                        <h6 class="font-medium mt-2">Parameters:</h6>
+                        <ul class="list-disc pl-5">
+                            <li>query_embedding (list): Vector to search for</li>
+                            <li>limit (int): Maximum number of results</li>
+                            <li>metadata_filter (dict): Filter by metadata</li>
+                            <li>threshold (float): Minimum similarity score</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">search_by_id</h5>
+                        <p>Searches for vectors similar to one with a specific ID.</p>
+                        <h6 class="font-medium mt-2">Parameters:</h6>
+                        <ul class="list-disc pl-5">
+                            <li>id (str): ID of the reference vector</li>
+                            <li>limit (int): Maximum number of results</li>
+                            <li>metadata_filter (dict): Filter by metadata</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">delete_embedding</h5>
+                        <p>Removes an embedding from the database.</p>
+                        <h6 class="font-medium mt-2">Parameters:</h6>
+                        <ul class="list-disc pl-5">
+                            <li>id (str): ID of the embedding to delete</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-2">ChromaDB Integration</h4>
+                <div class="code-container">
+                    <pre><code>import chromadb
+from chromadb.config import Settings
+
+# ChromaDB configuration
+CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", "./chroma_db")
+CHROMA_COLLECTION_NAME = os.getenv("CHROMA_COLLECTION_NAME", "image_embeddings")
+
+# Initialize ChromaDB client
+def init_vector_db():
+    global chroma_client, collection, vector_db_available
+    
+    try:
+        chroma_client = chromadb.Client(Settings(
+            chroma_db_impl="duckdb+parquet",
+            persist_directory=CHROMA_PERSIST_DIRECTORY
+        ))
+        
+        # Create or get the collection
+        collection = chroma_client.get_or_create_collection(
+            name=CHROMA_COLLECTION_NAME,
+            metadata={"hnsw:space": "cosine"}
+        )
+        
+        vector_db_available = True
+        logger.info("Vector database initialized successfully")
+    except Exception as e:
+        logger.error(f"Error initializing vector database: {e}")
+        vector_db_available = False
+
+# Add embedding to the vector database
+async def add_embedding(id, embedding, metadata):
+    if not vector_db_available:
+        raise RuntimeError("Vector database is not available")
+    
+    try:
+        collection.add(
+            ids=[str(id)],
+            embeddings=[embedding],
+            metadatas=[metadata]
+        )
+        return True
+    except Exception as e:
+        logger.error(f"Error adding embedding to vector DB: {e}")
+        raise
+
+# Search by embedding vector
+async def search_by_embedding(query_embedding, limit=10, metadata_filter=None, threshold=0.0):
+    if not vector_db_available:
+        raise RuntimeError("Vector database is not available")
+    
+    try:
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=limit,
+            where=metadata_filter
+        )
+        
+        # Process and filter results by threshold
+        processed_results = []
+        for i, (id, distance) in enumerate(zip(results['ids'][0], results['distances'][0])):
+            if distance >= threshold:
+                processed_results.append({
+                    'id': id,
+                    'score': 1.0 - distance,  # Convert distance to similarity score
+                    'metadata': results['metadatas'][0][i] if 'metadatas' in results else {}
+                })
+        
+        return processed_results
+    except Exception as e:
+        logger.error(f"Error searching vector DB: {e}")
+        raise</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-semantic-search">
+                <h3 class="text-2xl subheading">Semantic Search (semantic_search.py)</h3>
+                <p class="mb-4">
+                    The semantic search module implements advanced search capabilities for images using embedding vectors.
+                    It enables text-to-image, image-to-image, and filtered searches.
+                </p>
+                <h4 class="text-xl font-semibold mt-4 mb-2">Search Types</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">Text-to-Image Search</h5>
+                        <p>Search for images using a text query.</p>
+                        <ol class="list-decimal pl-5 mt-2">
+                            <li>Convert text query to embedding vector</li>
+                            <li>Search vector database for similar vectors</li>
+                            <li>Retrieve and return matching images</li>
+                        </ol>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">Image-to-Image Search</h5>
+                        <p>Search for images similar to a provided image.</p>
+                        <ol class="list-decimal pl-5 mt-2">
+                            <li>Generate embedding vector for the uploaded image</li>
+                            <li>Search vector database for similar vectors</li>
+                            <li>Retrieve and return matching images</li>
+                        </ol>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">Search by Image ID</h5>
+                        <p>Find images similar to an existing image in the database.</p>
+                        <ol class="list-decimal pl-5 mt-2">
+                            <li>Retrieve embedding vector for the specified image ID</li>
+                            <li>Search vector database for similar vectors</li>
+                            <li>Retrieve and return matching images</li>
+                        </ol>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">Filtered Search</h5>
+                        <p>Search with additional metadata filters (team, user, etc.).</p>
+                        <ol class="list-decimal pl-5 mt-2">
+                            <li>Convert query to embedding vector</li>
+                            <li>Apply metadata filters to the search</li>
+                            <li>Retrieve and return filtered results</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-2">Implementation</h4>
+                <div class="code-container">
+                    <pre><code>from image_understanding import generate_text_embedding, generate_image_embedding
+from vector_db import search_by_embedding, get_embedding_by_id
+from database import Image, ImageEmbedding
+
+async def search_by_text(
+    query_text, 
+    limit=10, 
+    team_id=None, 
+    threshold=0.0,
+    db=None
+):
+    """Search images by text query"""
+    try:
+        # Generate text embedding
+        embedding_result = await generate_text_embedding(query_text)
+        query_embedding = embedding_result["embedding"]
+        
+        # Prepare metadata filter if team_id is specified
+        metadata_filter = {"team_id": str(team_id)} if team_id else None
+        
+        # Search vector database
+        search_results = await search_by_embedding(
+            query_embedding=query_embedding,
+            limit=limit,
+            metadata_filter=metadata_filter,
+            threshold=threshold
+        )
+        
+        # Retrieve full image data for results
+        enriched_results = await enrich_search_results(search_results, db)
+        
+        return {
+            "query": query_text,
+            "results": enriched_results
+        }
+    except Exception as e:
+        logger.error(f"Error in text search: {e}")
+        raise
+
+async def search_by_image(
+    image_file,
+    limit=10,
+    team_id=None,
+    threshold=0.0,
+    db=None
+):
+    """Search images by similarity to an uploaded image"""
+    try:
+        # Save uploaded image temporarily
+        temp_file_path = f"/tmp/{uuid.uuid4()}.jpg"
+        with open(temp_file_path, "wb") as temp_file:
+            content = await image_file.read()
+            temp_file.write(content)
+        
+        # Generate image embedding
+        embedding_result = await generate_image_embedding(temp_file_path)
+        query_embedding = embedding_result["embedding"]
+        
+        # Clean up temporary file
+        os.unlink(temp_file_path)
+        
+        # Prepare metadata filter if team_id is specified
+        metadata_filter = {"team_id": str(team_id)} if team_id else None
+        
+        # Search vector database
+        search_results = await search_by_embedding(
+            query_embedding=query_embedding,
+            limit=limit,
+            metadata_filter=metadata_filter,
+            threshold=threshold
+        )
+        
+        # Retrieve full image data for results
+        enriched_results = await enrich_search_results(search_results, db)
+        
+        return {
+            "query": "image_upload",
+            "results": enriched_results
+        }
+    except Exception as e:
+        logger.error(f"Error in image search: {e}")
+        raise</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+            
+            <section id="comp-visualization">
+                <h3 class="text-2xl subheading">Visualization (visualization_simple.py)</h3>
+                <p class="mb-4">
+                    The visualization module provides tools for visualizing image embeddings using dimensionality reduction techniques.
+                </p>
+                <h4 class="text-xl font-semibold mt-4 mb-2">Visualization Methods</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">PCA</h5>
+                        <p>Principal Component Analysis for visualization in 2D or 3D.</p>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">t-SNE</h5>
+                        <p>t-Distributed Stochastic Neighbor Embedding for non-linear dimensionality reduction.</p>
+                    </div>
+                    <div class="card">
+                        <h5 class="font-semibold mb-2">UMAP</h5>
+                        <p>Uniform Manifold Approximation and Projection for preserving global structure.</p>
+                    </div>
+                </div>
+                
+                <h4 class="text-xl font-semibold mt-6 mb-2">Implementation</h4>
+                <div class="code-container">
+                    <pre><code>import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+import plotly.graph_objects as go
+
+async def generate_embedding_visualization(
+    team_id=None,
+    method="pca",
+    include_images=False
+):
+    """Generate visualization of image embeddings"""
+    try:
+        # Get all embeddings from the database
+        embeddings_data = await get_all_embeddings(team_id)
+        
+        if not embeddings_data["embeddings"] or not embeddings_data["embeddings"][0]:
+            return {"error": "No embeddings found"}
+        
+        # Convert embeddings to numpy array
+        embeddings = np.array(embeddings_data["embeddings"][0])
+        ids = embeddings_data["ids"][0]
+        metadata = embeddings_data["metadata"][0] if "metadata" in embeddings_data else [{}] * len(ids)
+        
+        # Apply dimensionality reduction
+        if method.lower() == "pca":
+            reduced_data = PCA(n_components=2).fit_transform(embeddings)
+        elif method.lower() == "tsne":
+            reduced_data = TSNE(n_components=2, perplexity=min(30, len(embeddings)-1) if len(embeddings) > 1 else 1).fit_transform(embeddings)
+        elif method.lower() == "umap":
+            import umap
+            reducer = umap.UMAP(n_components=2)
+            reduced_data = reducer.fit_transform(embeddings)
+        else:
+            return {"error": f"Unsupported visualization method: {method}"}
+        
+        # Prepare visualization data
+        points = []
+        for i, (x, y) in enumerate(reduced_data):
+            point = {
+                "id": ids[i],
+                "x": float(x),
+                "y": float(y),
+                "metadata": metadata[i]
+            }
+            points.append(point)
+        
+        # Create plotly figure
+        fig = go.Figure()
+        
+        # Add scatter plot
+        fig.add_trace(go.Scatter(
+            x=[p["x"] for p in points],
+            y=[p["y"] for p in points],
+            mode="markers",
+            marker=dict(
+                size=10,
+                color="rgba(40, 116, 166, 0.8)",
+                line=dict(width=1, color="rgba(40, 116, 166, 1)")
+            ),
+            text=[p["id"] for p in points],
+            hoverinfo="text"
+        ))
+        
+        # Configure layout
+        fig.update_layout(
+            title=f"Image Embeddings Visualization ({method.upper()})",
+            xaxis_title="Dimension 1",
+            yaxis_title="Dimension 2",
+            template="plotly_white"
+        )
+        
+        # Convert to JSON
+        plot_json = fig.to_json()
+        
+        return {
+            "method": method,
+            "points": points,
+            "plot": plot_json
+        }
+    except Exception as e:
+        logger.error(f"Error generating visualization: {e}")
+        raise</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </section>
+        </section>
+
+        <section id="best-practices">
+            <h2 class="text-3xl heading">Best Practices</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">Security</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Always use API keys with appropriate permissions</li>
+                        <li>Implement proper team-based access controls</li>
+                        <li>Set expiration times for API keys</li>
+                        <li>Use HTTPS for all API requests</li>
+                        <li>Validate all user inputs thoroughly</li>
+                        <li>Implement rate limiting to prevent abuse</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">Performance</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Use async endpoints for better concurrency</li>
+                        <li>Implement pagination for large result sets</li>
+                        <li>Use caching for frequently accessed data</li>
+                        <li>Monitor and optimize database queries</li>
+                        <li>Use signed URLs for image access rather than proxying through the API</li>
+                        <li>Consider using a CDN for image delivery</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">Scaling</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Use container orchestration for horizontal scaling</li>
+                        <li>Implement database connection pooling</li>
+                        <li>Consider using a message queue for processing embedding generation asynchronously</li>
+                        <li>Use read replicas for database read operations</li>
+                        <li>Implement proper caching strategies</li>
+                        <li>Monitor performance metrics and scale accordingly</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">Development</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Follow REST API conventions</li>
+                        <li>Use descriptive error messages</li>
+                        <li>Maintain comprehensive API documentation</li>
+                        <li>Implement proper versioning strategy</li>
+                        <li>Use Pydantic models for request/response validation</li>
+                        <li>Write comprehensive tests</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="troubleshooting">
+            <h2 class="text-3xl heading">Troubleshooting</h2>
+            
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-3">Common Issues and Solutions</h3>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-primary">Authentication Failures</h4>
+                    <p class="mb-2">If you're experiencing authentication issues:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Ensure your API key is valid and active</li>
+                        <li>Check that the Authorization header is properly formatted</li>
+                        <li>Verify that the API key hasn't expired</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-primary">Database Connection Issues</h4>
+                    <p class="mb-2">If the API fails to connect to the database:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Check database credentials in the environment variables</li>
+                        <li>Verify that the database server is running</li>
+                        <li>Check for network connectivity issues</li>
+                        <li>Ensure the database schema is properly set up</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-primary">Vector Database Problems</h4>
+                    <p class="mb-2">If you encounter issues with ChromaDB:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Check that ChromaDB is running and accessible</li>
+                        <li>Ensure the CHROMA_PERSIST_DIRECTORY is correctly set</li>
+                        <li>Verify that embeddings have correct dimensions</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-primary">Storage Integration Issues</h4>
+                    <p class="mb-2">If file uploads or retrievals fail:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Check storage provider configuration</li>
+                        <li>Verify credentials for GCS, S3, or MinIO</li>
+                        <li>Ensure the storage buckets exist and are accessible</li>
+                        <li>Check file permissions and path formating</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold text-primary">Performance Issues</h4>
+                    <p class="mb-2">If the API is slow or unresponsive:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Check server resource utilization</li>
+                        <li>Optimize database queries and indexes</li>
+                        <li>Consider scaling up resources or implementing caching</li>
+                        <li>Use async endpoints and connection pooling</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <h3 class="text-xl font-semibold mb-3">Logging and Debugging</h3>
+                <p class="mb-2">The API uses Python's logging module to log information, warnings, and errors.</p>
+                
+                <div class="code-container">
+                    <pre><code># Set log level in the environment variables
+LOG_LEVEL=DEBUG  # Options: DEBUG, INFO, WARNING, ERROR
+
+# View logs in Docker
+docker-compose logs -f api
+
+# Enable detailed debugging
+LOG_LEVEL=DEBUG uvicorn main:app --reload</code></pre>
+                    <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function copyToClipboard(button) {
+            const codeBlock = button.previousElementSibling;
+            const textToCopy = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                // Change button text temporarily
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+        
+        // Handle mobile navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileNavButton = document.querySelector('.mobile-nav button');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (mobileNavButton && sidebar) {
+                mobileNavButton.addEventListener('click', function() {
+                    if (sidebar.style.display === 'block') {
+                        sidebar.style.display = 'none';
+                    } else {
+                        sidebar.style.display = 'block';
+                        sidebar.style.width = '100%';
+                        sidebar.style.top = '0';
+                        sidebar.style.left = '0';
+                        sidebar.style.height = '100%';
+                        sidebar.style.zIndex = '100';
+                        sidebar.style.paddingTop = '4rem';
+                    }
+                });
+            }
+            
+            // Track active section in navigation
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const setActiveNav = () => {
+                let scrollPosition = window.scrollY + 300;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                        const currentId = section.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${currentId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', setActiveNav);
+            setActiveNav();
+        });
+    </script>
+</body>
+</html>
